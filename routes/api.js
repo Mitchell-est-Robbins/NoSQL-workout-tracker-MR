@@ -62,6 +62,7 @@ router.delete('/api/workouts', ({body}, res)=> {
 });
 
 //Route for the dashboard, according to api.js
+// worked with will on this part
 router.get('/api/workouts/range', (req, res)=> {
     Workout.aggregate([
         {
