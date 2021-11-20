@@ -35,11 +35,11 @@ router.post('/api/workouts', (req, res) => {
     });
 });
 
-router.put('/api/workouts/:id',  (req, res) => {
-    Workout.findByIdAndUpdate(  //<-- cool but took some looking up
+router.put('/api/workouts/:id',  ({body, params }, res) => {
+    Workout.findByIdAndUpdate(  //<-- cool, but took some looking up
         params.id,
         {$push: {exercises: body}},
-        {new:true}
+        {new:true},
     )
     .then((dbWorkout) => {
         res.json(dbWorkout);
@@ -60,6 +60,27 @@ router.delete('/api/workouts', ({body}, res)=> {
         res.json(err)
     });
 });
+
+//Route for the dashboard, according to api.js
+router.get('/api/workouts/range', (req, res)=> {
+    Workout.aggregate([
+        {
+            $addFields: {
+                totalDuration:{
+                    $sum: '$exercises.duration',
+                },
+            },
+        },
+    ])
+        .sort({ _id: -1 })
+        .then((dbWorkouts) => {
+            console.log(dbWorkouts);
+            res.json(dbWorkouts);
+        })
+        .catch((err) => {
+            res.json(err);
+        });
+})
 
 // ====== Non API routes =================================================
 
