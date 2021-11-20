@@ -1,9 +1,79 @@
+const router = require("express").Router();
+const Workout = require("../models/workout.js");
+const path = require ("path");
+
+
+router.get('/api/workouts', (req, res) =>{
+    Workout.aggregate([
+        {
+            $addFields:{
+            totalDuration:{
+            $sum: '$exercises.duration',
+            },
+        },
+    },
+    ])
+    .then((dbWorkout) => {
+        res.json(dbWorkout);
+
+    })
+    .catch((err)=>{
+        res.json(err)
+    });
+})
 
 
 
+router.post('/api/workouts', (req, res) => {
+    Workout.create({})
+    .then((dbWorkout) => {
+        res.json(dbWorkout);
 
+    })
+    .catch((err)=>{
+        res.json(err)
+    });
+});
 
+router.put('/api/workouts/:id',  (req, res) => {
+    Workout.findByIdAndUpdate(  //<-- cool but took some looking up
+        params.id,
+        {$push: {exercises: body}},
+        {new:true}
+    )
+    .then((dbWorkout) => {
+        res.json(dbWorkout);
 
+    })
+    .catch((err)=>{
+        res.json(err)
+    });
+});
+
+router.delete('/api/workouts', ({body}, res)=> {
+    Workout.findByIdAndUpdate(body.id)
+    .then(() => {
+        res.json(true);
+
+    })
+    .catch((err)=>{
+        res.json(err)
+    });
+});
+
+// ====== Non API routes =================================================
+
+//need a path for exercise.html
+router.get("/exercise", (req,res)=>{
+    res.sendFile(path.join(__dirname, "../public/exercise.html"))
+})
+
+//need a path for stats.html
+router.get("/stats", (req,res)=>{
+    res.sendFile(path.join(__dirname, "../public/stats.html"))
+})
+
+module.exports= router;
 
 
 
