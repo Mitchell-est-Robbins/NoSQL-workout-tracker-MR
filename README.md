@@ -12,16 +12,16 @@
 
 
 
--------
+
 
 ## **Description** 
 A daily workout tracker for the gym rat on the go. 
 
---------
+
 
 ## A gif walkthrough
 ![gif of walkthrough](refs/Fitness.gif)
----------
+
 
 ## **Questions:**
 
